@@ -1,0 +1,33 @@
+.game-scene {
+  position: absolute;
+  width: 100%;
+  background-image:url('../assets/game-background.png');
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(16px + vmin);
+  color: white;
+
+  margin: 30px,60px;
+}
+
+.my-displayer {
+  position: absolute;
+  height: 60%;
+  left: 60px;
+  right: 60px;
+  bottom: 30px;
+}
+
+.my-info {
+  color: white;
+  text-align: right;
+}
+
+p {
+  margin: 0.2em;
+}
