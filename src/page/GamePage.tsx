@@ -4,49 +4,22 @@ import gameBackground from '../assets/game-background.png';
 import './GamePage.css';
 import internal from 'stream';
 import { countReset } from 'console';
+import { CardState, GameState, PlayerState} from '../regulates/Interfaces'
 
-
-
-interface Card {
-  name: string,
-  counter: Record<string,number>,
-  tapped: boolean,
-  faceup: boolean,
-  power?: number,
-  defense?: number,
-  durablility?: number,
+interface CardDisplayProps {
+  cardState: CardState,
 }
 
-const CardExample : Card = {
-  name: "法阵法器法术三合一超级能力丰富俱全名字超长供给测试专属卡",
-  counter: {
-    "level":2,
-  },
-  tapped: true,
-  faceup: true,
-  power: 3,
-  defense: 4,
-  durablility: 12,
-};
-
-class CardDisplay extends React.Component<Card,{}> {
+class CardDisplay extends React.Component<CardDisplayProps,{}> {
   render() {
     return (
-      <div className=''></div>
+      <div className={'card-ground '+this.props.cardState.tapped?'card-ground-tapped':''}></div>
     );
   }
 }
 
-interface PlayerState {
-  health: number,
-  mana: number,
-  level: number,
-}
-
 interface GamePageProps {
-  gameState: {
-    playerState: PlayerState[],
-  };
+  gameState: GameState,
 }
 
 class GamePage extends React.Component<GamePageProps,{}> {
@@ -55,7 +28,7 @@ class GamePage extends React.Component<GamePageProps,{}> {
       <div className="game-scene">
         <div className="my-displayer">
           <div className="my-sorcery">
-            
+            <CardDisplay cardState={this.props.gameState.groundState.sorceryState[0]}></CardDisplay>
           </div>
           <div className="my-info">
             <p>{"命火: " + this.props.gameState.playerState[0].health}</p>
