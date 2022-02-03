@@ -18,7 +18,7 @@ export interface CardState {
 
 export interface GameState {
   playerState: PlayerState[],
-  groundState: {
+  myGroundState: {
     sorceryState: CardState[],
     equipmentState: CardState[],
     zisurruState: CardState[],

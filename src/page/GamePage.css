@@ -1,10 +1,12 @@
+/* ======== GameFrame ======== */
+
 .game-scene {
-  position: absolute;
+  /* position: absolute; */
   width: 100%;
   background-image:url('../assets/game-background.png');
   background-repeat: no-repeat;
   background-size:100% 100%;
-  min-height: 100vh;
+  min-height: 97vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,10 +26,160 @@
 }
 
 .my-info {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
   color: white;
   text-align: right;
 }
 
 p {
   margin: 0.2em;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.my-sorcery,.my-zisurru,.my-equipment {
+  display: flex;
+  flex-direction: row;
+}
+
+.my-sorcery {
+  top: 0px;
+}
+
+.my-zisurru,.my-equipment {
+  position: absolute;
+  bottom: 160px;
+}
+
+.my-equipment {
+  left: 420px;
+}
+
+/* ======== GroundCard ======== */
+
+.card-ground {
+  position: relative;
+  margin: 0px 13px;
+  width: 100px;
+  height: 120px;
+  border-radius: 8px;
+  background-color: #eeeeee;
+  color: #000000;
+  box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.17);
+  text-align: center;
+}
+
+.card-ground-name {
+}
+
+.card-ground-power,.card-ground-durability,.card-ground-defense {
+  border-radius: 0.6em;
+  max-width: 2.4em;
+  min-width: 1.6em;
+  position: absolute;
+}
+
+.card-ground-power {
+  left: -1.0em;
+  bottom: -0.5em;
+  border: 2px solid #ff0000;
+  background-color: #ff6666;
+}
+
+.card-ground-durability {
+  left: 47%;
+  transform: translateX(-50%);
+  bottom: -1em;
+  border: 2px solid #0000ff;
+  background-color: #6666ff;
+}
+
+.card-ground-defense {
+  right: -1.0em;
+  bottom: -0.5em;
+  border: 2px solid #00ff00;
+  background-color: #66ff66;
+}
+
+
+.card-ground-tapped {
+  transform: rotate(20deg);
+}
+
+/* ======== CardDetail ======== */
+
+.card-detail {
+  border-radius: 24px;
+  position: absolute;
+  right: 120px;
+  height: 240px;
+  width: 200px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.card-detail-name {
+  margin: 10px;
+}
+
+.card-detail-power,.card-detail-durability,.card-detail-defense {
+  border-radius: 0.6em;
+  text-align: center;
+  max-width: 2.4em;
+  min-width: 1.6em;
+  position: absolute;
+}
+
+.card-detail-power {
+  left: -1.0em;
+  bottom: -0.5em;
+  border: 2px solid #ff0000;
+  background-color: #ff6666;
+}
+
+.card-detail-durability {
+  left: 49%;
+  transform: translateX(-50%);
+  bottom: -1em;
+  border: 2px solid #0000ff;
+  background-color: #6666ff;
+}
+
+.card-detail-defense {
+  right: -1.0em;
+  bottom: -0.5em;
+  border: 2px solid #00ff00;
+  background-color: #66ff66;
+}
+
+.card-detail-info-frame {
+  position: absolute;
+  top: 0px;
+  left: 210px;
+  width: 100px;
+  height: 240px;
+}
+
+.card-detail-info {
+  border-radius: 0.4em;
+  background-color: #222222;
+  height: 2.4em;
+  width: 2.4em;
+  margin: 0.05em;
+  color: #dddddd;
+  text-align: center;
+}
+
+.card-detail-info-name {
+  font-size: 0.6em;
+}
+
+.card-detail-info-value {
+  font-size: 0.8em;
 }
