@@ -151,9 +151,9 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     this.setState({showingCard: val});
   }
 
-  myGroundCardGenerator(arr: CardState[],limit: number) {
+  groundCardGenerator(arr: CardState[],limit: number,lookable: boolean) {
     console.assert(arr.length <= limit);
-    return arr.map(state => <CardDisplay cardState={state} onHover={this.setDetailDisplay} lookable={true}/>);
+    return arr.map(state => <CardDisplay cardState={state} onHover={this.setDetailDisplay} lookable={lookable}/>);
   }
 
   handCardGenerator(arr: CardState[],inMyHand: boolean) {
@@ -166,13 +166,13 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
       <div className="game-scene">
         <div className="my-displayer">
           <div className="my-sorcery">
-            {this.myGroundCardGenerator(gameState.myGroundState.sorceryState, 8)}
+            {this.groundCardGenerator(gameState.myGroundState.sorceryState, 8, true)}
           </div>
           <div className="my-zisurru">
-            {this.myGroundCardGenerator(gameState.myGroundState.zisurruState, 3)}
+            {this.groundCardGenerator(gameState.myGroundState.zisurruState, 3, true)}
           </div>
           <div className="my-equipment">
-            {this.myGroundCardGenerator(gameState.myGroundState.equipmentState, 3)}
+            {this.groundCardGenerator(gameState.myGroundState.equipmentState, 3, true)}
           </div>
           <div className="my-library">
             {gameState.myGroundState.libraryState.length}
@@ -187,6 +187,34 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
             {this.handCardGenerator(gameState.myHandState, true)}
           </div>
           <div className="my-info">
+            <p>{"命火: " + gameState.playerState[0].health}</p>
+            <p>{"灵力: " + gameState.playerState[0].mana}</p>
+            <p>{"修为: " + showLevel(gameState.playerState[0].level)}</p>
+          </div>
+        </div>
+        <div className="rival-displayer">
+          <div className="rival-sorcery">
+            {this.groundCardGenerator(gameState.myGroundState.sorceryState, 8, false)}
+          </div>
+          <div className="rival-zisurru">
+            {this.groundCardGenerator(gameState.myGroundState.zisurruState, 3, false)}
+          </div>
+          <div className="rival-equipment">
+            {this.groundCardGenerator(gameState.myGroundState.equipmentState, 3, false)}
+          </div>
+          <div className="rival-library">
+            {gameState.myGroundState.libraryState.length}
+          </div>
+          <div className="rival-graveyard">
+            {gameState.myGroundState.graveyardState.length}
+          </div>
+          <div className="rival-blackhole">
+            {gameState.myGroundState.blackholeState.length}
+          </div>
+          <div className="rival-hand">
+            {this.handCardGenerator(gameState.myHandState, true)}
+          </div>
+          <div className="rival-info">
             <p>{"命火: " + gameState.playerState[0].health}</p>
             <p>{"灵力: " + gameState.playerState[0].mana}</p>
             <p>{"修为: " + showLevel(gameState.playerState[0].level)}</p>

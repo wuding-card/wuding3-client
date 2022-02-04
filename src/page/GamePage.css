@@ -3,6 +3,16 @@ div,p {
   cursor: default;
 }
 
+p {
+  margin: 0.2em;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
 /* ======== GameFrame ======== */
 
 .game-scene {
@@ -36,16 +46,6 @@ div,p {
   bottom: 0px;
   color: white;
   text-align: right;
-}
-
-p {
-  margin: 0.2em;
-  word-break: break-all;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
 }
 
 .my-sorcery,.my-zisurru,.my-equipment {
@@ -91,6 +91,73 @@ p {
 
 .my-blackhole {
   bottom: 95px;
+  background-image: url(../assets/logos/blackhole-logo.png);
+}
+
+.rival-displayer {
+  position: absolute;
+  height: 24%;
+  top: 5px;
+  left: 60px;
+  right: 60px;
+}
+
+.rival-info {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  color: white;
+  text-align: left;
+}
+
+.rival-sorcery,.rival-zisurru,.rival-equipment {
+  position: absolute;
+  bottom: -45px;
+  display: flex;
+  flex-direction: row;
+  transform: scale(0.75);
+}
+
+.rival-sorcery {
+  left: -120px;
+}
+
+.rival-zisurru {
+  left: 760px;
+}
+
+.rival-equipment {
+  left: 1100px;
+}
+
+
+.rival-library, .rival-graveyard, .rival-blackhole {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 2.4em;
+  height: 2.4em;
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+}
+
+.rival-library {
+  top: 0px;
+  left: 100px;
+  background-image: url(../assets/logos/library-logo.png);
+}
+
+.rival-graveyard {
+  top: 0px;
+  left: 145px;
+  background-image: url(../assets/logos/graveyard-logo.png);
+}
+
+.rival-blackhole {
+  top: 45px;
+  left: 100px;
   background-image: url(../assets/logos/blackhole-logo.png);
 }
 
@@ -286,6 +353,17 @@ p {
   display: flex;
   flex-direction: row-reverse;
 }
+
+.rival-hand {
+  position: absolute;
+  left: 0px;
+  top: -10px;
+  width: 1600px;
+  display: flex;
+  flex-direction: row-reverse;
+  transform: scale(0.75);
+}
+
 
 .card-hand {
   writing-mode: vertical-rl;
