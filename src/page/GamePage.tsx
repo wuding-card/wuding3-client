@@ -212,7 +212,7 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
             {gameState.myGroundState.blackholeState.length}
           </div>
           <div className="rival-hand">
-            {this.handCardGenerator(gameState.myHandState, true)}
+            {this.handCardGenerator(gameState.myHandState, false)}
           </div>
           <div className="rival-info">
             <p>{"命火: " + gameState.playerState[0].health}</p>
