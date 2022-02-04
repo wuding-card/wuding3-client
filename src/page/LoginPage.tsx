@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/lowlogo.png';
+import logo from '../assets/logos/lowlogo.png';
 import './LoginPage.css';
 import internal from 'stream';
 

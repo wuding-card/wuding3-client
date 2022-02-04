@@ -1,9 +1,14 @@
+/* ======== GlobalSettings ======== */
+div,p {
+  cursor: default;
+}
+
 /* ======== GameFrame ======== */
 
 .game-scene {
   /* position: absolute; */
   width: 100%;
-  background-image:url('../assets/game-background.png');
+  background-image:url('../assets/backgrounds/game-background.png');
   background-repeat: no-repeat;
   background-size:100% 100%;
   min-height: 97vh;
@@ -61,9 +66,37 @@ p {
   left: 420px;
 }
 
+.my-library, .my-graveyard, .my-blackhole {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  left: 5px;
+  width: 2.4em;
+  height: 2.4em;
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+}
+
+.my-library {
+  bottom: 5px;
+  background-image: url(../assets/logos/library-logo.png);
+}
+
+.my-graveyard {
+  bottom: 50px;
+  background-image: url(../assets/logos/graveyard-logo.png);
+}
+
+.my-blackhole {
+  bottom: 95px;
+  background-image: url(../assets/logos/blackhole-logo.png);
+}
+
 /* ======== GroundCard ======== */
 
-.card-ground {
+.card-ground,.card-ground-facedown {
   position: relative;
   margin: 0px 13px;
   width: 100px;
@@ -73,6 +106,12 @@ p {
   color: #000000;
   box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.17);
   text-align: center;
+}
+
+.card-ground-facedown {
+  background-image:url('../assets/backgrounds/card-back.png');
+  background-repeat: no-repeat;
+  background-size:100% 100%;
 }
 
 .card-ground-name {
@@ -107,6 +146,9 @@ p {
   background-color: #66ff66;
 }
 
+.card-ground-counter {
+
+}
 
 .card-ground-tapped {
   transform: rotate(20deg);
@@ -125,7 +167,7 @@ p {
 }
 
 .card-detail-name {
-  margin: 10px;
+  margin: 15px;
 }
 
 .card-detail-power,.card-detail-durability,.card-detail-defense {
@@ -158,11 +200,58 @@ p {
   background-color: #66ff66;
 }
 
+.card-detail-sect, .card-detail-level, .card-detail-cast-cost, .card-detail-maintain-cost {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+}
+
+.card-detail-sect, .card-detail-level {
+  border: 1px solid #000000;
+}
+
+.card-detail-sect {
+  width: 2.4em;
+  top: -1em;
+  left: -1.8em;
+}
+
+.card-detail-level {
+  width: 2em;
+  top: 0.4em;
+  left: -1.6em;
+}
+
+.card-detail-cast-cost, .card-detail-maintain-cost {
+  border: 1px solid #000000;
+  border-radius: 100em;
+}
+
+.card-detail-cast-cost {
+  width: 2.4em;
+  height: 2.4em;
+  top: -1em;
+  right: -1em;
+}
+
+.card-detail-maintain-cost {
+  width: 2em;
+  height: 2em;
+  top: 1.2em;
+  right: -0.8em;
+}
+
 .card-detail-info-frame {
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
   top: 0px;
-  left: 210px;
   width: 100px;
+  left: 210px;
   height: 240px;
 }
 
@@ -177,9 +266,40 @@ p {
 }
 
 .card-detail-info-name {
-  font-size: 0.6em;
+  font-size: 0.8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-detail-info-value {
   font-size: 0.8em;
+}
+
+/* ======== CardHand ======== */
+
+.my-hand {
+  position: absolute;
+  left: 100px;
+  bottom: 5px;
+  width: 1000px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.card-hand {
+  writing-mode: vertical-rl;
+  border-radius: 12px;
+  width: 100px;
+  height: 120px;
+  margin-right: -40px;
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 4px 8px 20px 0px rgba(0, 0, 0, 0.25);
+}
+
+.card-hand-name {
+  font-size: 14px;
+  margin: 0.2em;
+  writing-mode: vertical-rl;
 }

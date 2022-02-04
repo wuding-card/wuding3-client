@@ -14,6 +14,11 @@ export interface CardState {
   power?: number,
   defense?: number,
   durablility?: number,
+  maintainCost?: number,
+  castCost?: number,
+  sectID: number,
+  level: number,
+  typeID: number,
 }
 
 export interface GameState {
@@ -22,5 +27,18 @@ export interface GameState {
     sorceryState: CardState[],
     equipmentState: CardState[],
     zisurruState: CardState[],
+    libraryState: CardState[],
+    graveyardState: CardState[],
+    blackholeState: CardState[],
   }
+  myHandState: CardState[],
+  rivalGroundState: {
+    sorceryState: CardState[],
+    equipmentState: CardState[],
+    zisurruState: CardState[],
+    libraryState: CardState[],
+    graveyardState: CardState[],
+    blackholeState: CardState[],
+  }
+  rivalHandState: CardState[],
 }

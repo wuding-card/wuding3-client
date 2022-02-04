@@ -5,7 +5,7 @@ import './GamePage.css';
 import internal from 'stream';
 import { assert, countReset } from 'console';
 import { CardState, GameState, PlayerState} from '../regulates/interfaces';
-import { numberAbbr } from '../regulates/utils';
+import { numberAbbr, counterTranslate, showSect, showType, showLevel, getDescription } from '../regulates/utils';
 
 interface CardDetailInfoProps {
   name: string,
@@ -29,23 +29,35 @@ interface CardDetailProps {
 
 class CardDetail extends React.Component<CardDetailProps,{}> {
   detailInfoGenerator() {
+    const cardState = this.props.cardState;
     let ret = [
-      (this.props.cardState.power!==undefined?<CardDetailInfo name={"攻击"} value={numberAbbr(this.props.cardState.power)}/>:null),
-      (this.props.cardState.durablility!==undefined?<CardDetailInfo name={"耐久"} value={numberAbbr(this.props.cardState.durablility)}/>:null),
-      (this.props.cardState.defense!==undefined?<CardDetailInfo name={"防御"} value={numberAbbr(this.props.cardState.defense)}/>:null),
+      (cardState.power!==undefined?<CardDetailInfo name={"攻击"} value={numberAbbr(cardState.power)}/>:null),
+      (cardState.durablility!==undefined?<CardDetailInfo name={"耐久"} value={numberAbbr(cardState.durablility)}/>:null),
+      (cardState.defense!==undefined?<CardDetailInfo name={"防御"} value={numberAbbr(cardState.defense)}/>:null),
     ];
-    for(const key in this.props.cardState.counter) {
-      ret.push(<CardDetailInfo name={key} value={numberAbbr(this.props.cardState.counter[key])}/>);
+    for(const key in cardState.counter) {
+      ret.push(<CardDetailInfo name={counterTranslate(key)} value={numberAbbr(cardState.counter[key])}/>);
+    }
+    if(ret.length > 10) {
+      console.log("Error: too much counters.");
     }
     return ret;
   }
   render() {
+    const cardState = this.props.cardState;
+    // Todo: Replace Type with icon.
     return (
       <div className="card-detail">
-        <p className="card-detail-name">{this.props.cardState.name}</p>
-        {this.props.cardState.power!==undefined?<p className="card-detail-power">{"攻击" + numberAbbr(this.props.cardState.power)}</p>:null}
-        {this.props.cardState.durablility!==undefined?<p className="card-detail-durability">{"耐久" + numberAbbr(this.props.cardState.durablility)}</p>:null}
-        {this.props.cardState.defense!==undefined?<p className="card-detail-defense">{"防御" + numberAbbr(this.props.cardState.defense)}</p>:null}
+        <p className="card-detail-name">{cardState.name}</p>
+        {cardState.power!==undefined?<p className="card-detail-power">{"攻击" + numberAbbr(cardState.power)}</p>:null}
+        {cardState.durablility!==undefined?<p className="card-detail-durability">{"耐久" + numberAbbr(cardState.durablility)}</p>:null}
+        {cardState.defense!==undefined?<p className="card-detail-defense">{"防御" + numberAbbr(cardState.defense)}</p>:null}
+        {cardState.castCost!==undefined?<p className="card-detail-cast-cost">{numberAbbr(cardState.castCost)}</p>:null}
+        {cardState.maintainCost!==undefined?<p className="card-detail-maintain-cost">{numberAbbr(cardState.maintainCost)}</p>:null}
+        <p className="card-detail-sect">{showSect(cardState.sectID)}</p>
+        <p className="card-detail-type">{showType(cardState.typeID)}</p>
+        <p className="card-detail-level">{showLevel(cardState.level)}</p>
+        <p className="card-detail-description">{getDescription(cardState.name)}</p>
         <div className="card-detail-info-frame">
           {this.detailInfoGenerator()}
         </div>
@@ -57,29 +69,63 @@ class CardDetail extends React.Component<CardDetailProps,{}> {
 interface CardDisplayProps {
   cardState: CardState,
   onHover: (val: CardState | null) => void,
+  lookable: boolean,
 }
 
 class CardDisplay extends React.Component<CardDisplayProps,{}> {
   render() {
+    const cardState = this.props.cardState;
     let ret = (<div className='error-placeholder'></div>);
-    if(this.props.cardState.faceup) {
+    if(cardState.faceup) {
       ret = (
-        <div className={'card-ground '+(this.props.cardState.tapped?'card-ground-tapped':'')} 
-        onMouseEnter={() => {this.props.onHover(this.props.cardState);}} onMouseLeave={() => {this.props.onHover(null);}}>
-          <p className={'card-ground-name'}>{this.props.cardState.name}</p>
-          {this.props.cardState.power!==undefined?<p className="card-ground-power">{numberAbbr(this.props.cardState.power)}</p>:null}
-          {this.props.cardState.durablility!==undefined?<p className="card-ground-durability">{numberAbbr(this.props.cardState.durablility)}</p>:null}
-          {this.props.cardState.defense!==undefined?<p className="card-ground-defense">{numberAbbr(this.props.cardState.defense)}</p>:null}
+        <div className={'card-ground '+(cardState.tapped?'card-ground-tapped':'')} 
+        onMouseEnter={() => {this.props.onHover(cardState);}} onMouseLeave={() => {this.props.onHover(null);}}>
+          <p className={'card-ground-name'}>{cardState.name}</p>
+          {cardState.power!==undefined?<p className="card-ground-power">{numberAbbr(cardState.power)}</p>:null}
+          {cardState.durablility!==undefined?<p className="card-ground-durability">{numberAbbr(cardState.durablility)}</p>:null}
+          {cardState.defense!==undefined?<p className="card-ground-defense">{numberAbbr(cardState.defense)}</p>:null}
+          {/* Todo: show counters. */}
         </div>
       )
     } else {
       ret = (
-        <div className={'card-ground '+(this.props.cardState.tapped?'card-ground-tapped':'')}>
-          背面暂时长这个样，这种事情也是没办法的嘛...
+        <div className={'card-ground-facedown '+(cardState.tapped?'card-ground-tapped':'')}
+          onMouseEnter={this.props.lookable?() => {this.props.onHover(cardState)}:()=>{}} onMouseLeave={this.props.lookable?() => {this.props.onHover(null);}:()=>{}}>
         </div>
       )
     }
     return ret;
+  }
+}
+
+interface CardHandProps{
+  cardState: CardState,
+  onHover: (val: CardState | null) => void,
+  lookable: boolean,
+}
+
+class CardHand extends React.Component<CardHandProps,{}> {
+  render() {
+    const cardState = this.props.cardState;
+    if(this.props.lookable) {
+      return (
+        <div className={'card-hand'}
+        onMouseEnter={() => {this.props.onHover(cardState);}} onMouseLeave={() => {this.props.onHover(null);}}>
+          <div className={'card-hand-name'}>
+            {cardState.name}
+          </div>
+        </div>
+      );
+    }else{
+      return (
+        <div className={cardState.faceup?'card-hand':'card-hand-facedown'}
+        onMouseEnter={cardState.faceup?() => {this.props.onHover(cardState)}:()=>{}} onMouseLeave={cardState.faceup?() => {this.props.onHover(null);}:()=>{}}>
+          <div className={'card-hand-name'}>
+            {cardState.name}
+          </div>
+        </div>
+      );
+    }
   }
 }
 
@@ -105,27 +151,45 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     this.setState({showingCard: val});
   }
 
-  cardListGenerator(arr: CardState[],limit: number) {
+  myGroundCardGenerator(arr: CardState[],limit: number) {
     console.assert(arr.length <= limit);
-    return arr.map(state => <CardDisplay cardState={state} onHover={this.setDetailDisplay} />);
+    return arr.map(state => <CardDisplay cardState={state} onHover={this.setDetailDisplay} lookable={true}/>);
+  }
+
+  handCardGenerator(arr: CardState[],inMyHand: boolean) {
+    return arr.map(state => <CardHand cardState={state} onHover={this.setDetailDisplay} lookable={inMyHand}/>);
   }
 
   render() {
+    const gameState = this.props.gameState;
     return (
       <div className="game-scene">
         <div className="my-displayer">
           <div className="my-sorcery">
-            {this.cardListGenerator(this.props.gameState.myGroundState.sorceryState, 8)}
+            {this.myGroundCardGenerator(gameState.myGroundState.sorceryState, 8)}
           </div>
           <div className="my-zisurru">
-            {this.cardListGenerator(this.props.gameState.myGroundState.zisurruState, 3)}
+            {this.myGroundCardGenerator(gameState.myGroundState.zisurruState, 3)}
           </div>
           <div className="my-equipment">
-            {this.cardListGenerator(this.props.gameState.myGroundState.equipmentState, 3)}
+            {this.myGroundCardGenerator(gameState.myGroundState.equipmentState, 3)}
+          </div>
+          <div className="my-library">
+            {gameState.myGroundState.libraryState.length}
+          </div>
+          <div className="my-graveyard">
+            {gameState.myGroundState.graveyardState.length}
+          </div>
+          <div className="my-blackhole">
+            {gameState.myGroundState.blackholeState.length}
+          </div>
+          <div className="my-hand">
+            {this.handCardGenerator(gameState.myHandState, true)}
           </div>
           <div className="my-info">
-            <p>{"命火: " + this.props.gameState.playerState[0].health}</p>
-            <p>{"灵力/修为: " + this.props.gameState.playerState[0].mana + "/" + this.props.gameState.playerState[0].level}</p>
+            <p>{"命火: " + gameState.playerState[0].health}</p>
+            <p>{"灵力: " + gameState.playerState[0].mana}</p>
+            <p>{"修为: " + showLevel(gameState.playerState[0].level)}</p>
           </div>
         </div>
         {this.state.showingCard!=null?<CardDetail cardState={this.state.showingCard} />:null}
