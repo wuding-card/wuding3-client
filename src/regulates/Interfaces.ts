@@ -13,7 +13,7 @@ export interface CardState {
   faceup: boolean,
   power?: number,
   defense?: number,
-  durablility?: number,
+  durability?: number,
   maintainCost?: number,
   castCost?: number,
   sectID: number,

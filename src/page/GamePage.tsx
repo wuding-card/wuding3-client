@@ -32,7 +32,7 @@ class CardDetail extends React.Component<CardDetailProps,{}> {
     const cardState = this.props.cardState;
     let ret = [
       (cardState.power!==undefined?<CardDetailInfo name={"攻击"} value={numberAbbr(cardState.power)}/>:null),
-      (cardState.durablility!==undefined?<CardDetailInfo name={"耐久"} value={numberAbbr(cardState.durablility)}/>:null),
+      (cardState.durability!==undefined?<CardDetailInfo name={"耐久"} value={numberAbbr(cardState.durability)}/>:null),
       (cardState.defense!==undefined?<CardDetailInfo name={"防御"} value={numberAbbr(cardState.defense)}/>:null),
     ];
     for(const key in cardState.counter) {
@@ -50,7 +50,7 @@ class CardDetail extends React.Component<CardDetailProps,{}> {
       <div className="card-detail">
         <p className="card-detail-name">{cardState.name}</p>
         {cardState.power!==undefined?<p className="card-detail-power">{"攻击" + numberAbbr(cardState.power)}</p>:null}
-        {cardState.durablility!==undefined?<p className="card-detail-durability">{"耐久" + numberAbbr(cardState.durablility)}</p>:null}
+        {cardState.durability!==undefined?<p className="card-detail-durability">{"耐久" + numberAbbr(cardState.durability)}</p>:null}
         {cardState.defense!==undefined?<p className="card-detail-defense">{"防御" + numberAbbr(cardState.defense)}</p>:null}
         {cardState.castCost!==undefined?<p className="card-detail-cast-cost">{numberAbbr(cardState.castCost)}</p>:null}
         {cardState.maintainCost!==undefined?<p className="card-detail-maintain-cost">{numberAbbr(cardState.maintainCost)}</p>:null}
@@ -82,7 +82,7 @@ class CardDisplay extends React.Component<CardDisplayProps,{}> {
         onMouseEnter={() => {this.props.onHover(cardState);}} onMouseLeave={() => {this.props.onHover(null);}}>
           <p className={'card-ground-name'}>{cardState.name}</p>
           {cardState.power!==undefined?<p className="card-ground-power">{numberAbbr(cardState.power)}</p>:null}
-          {cardState.durablility!==undefined?<p className="card-ground-durability">{numberAbbr(cardState.durablility)}</p>:null}
+          {cardState.durability!==undefined?<p className="card-ground-durability">{numberAbbr(cardState.durability)}</p>:null}
           {cardState.defense!==undefined?<p className="card-ground-defense">{numberAbbr(cardState.defense)}</p>:null}
           {/* Todo: show counters. */}
         </div>
