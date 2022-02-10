@@ -268,7 +268,7 @@ p {
   background-color: #66ff66;
 }
 
-.card-detail-sect, .card-detail-level, .card-detail-cast-cost, .card-detail-maintain-cost {
+.card-detail-sect, .card-detail-level, .card-detail-castCost, .card-detail-maintainCost {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -293,19 +293,19 @@ p {
   left: -1.6em;
 }
 
-.card-detail-cast-cost, .card-detail-maintain-cost {
+.card-detail-castCost, .card-detail-maintainCost {
   border: 1px solid #000000;
   border-radius: 100em;
 }
 
-.card-detail-cast-cost {
+.card-detail-castCost {
   width: 2.4em;
   height: 2.4em;
   top: -1em;
   right: -1em;
 }
 
-.card-detail-maintain-cost {
+.card-detail-maintainCost {
   width: 2em;
   height: 2em;
   top: 1.2em;
@@ -372,11 +372,11 @@ p {
   height: 120px;
   margin-right: -40px;
   box-shadow: 4px 8px 20px 0px rgba(0, 0, 0, 0.25);
+  color: #000000;
 }
 
 .card-hand {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #ffffff
 }
 
 .card-hand-facedown {
@@ -391,6 +391,6 @@ p {
   writing-mode: vertical-rl;
 }
 
-.rival-hand .card-hand-name {
+.rival-hand .card-hand-facedown .card-hand-name {
   font-size: 0px;
 }

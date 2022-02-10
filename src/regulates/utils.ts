@@ -3,6 +3,16 @@ import cardDescription from "../assets/text/cardDescription.json";
 
 export const CounterDictionary: Record<string,string> = counterDictionary;
 
+export const AttributeList: Record<string,string> = {
+  "power": "攻击",
+  "defense": "防御",
+  "durability": "耐久",
+}
+
+export function attributeTranslate(val: string): string {
+  return val in AttributeList? AttributeList[val]: "";
+}
+
 export function counterTranslate(val: string): string {
   return val in CounterDictionary? CounterDictionary[val]: val;
 }
