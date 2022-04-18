@@ -2,8 +2,13 @@ import React from 'react';
 import logo from '../assets/logos/lowlogo.png';
 import './LoginPage.css';
 import internal from 'stream';
+import { socket } from '../communication/connection';
 
 /* 主页面对应的 React 控件 */
+
+interface FormProps {
+  
+}
 
 interface FormState {
   userName: string;
@@ -68,7 +73,8 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
   }
 
   enterGameOnClick(){
-    this.props.enterGame("GamePage")
+    this.props.enterGame("GamePage");
+    socket.emit("enter-game",{})
   }
 
   render() {
@@ -76,7 +82,7 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
       <div className="login-scene">
         <header className="login-header">
           <img src={logo} className="login-logo" alt="logo"></img>
-          <BasicInfoForm></BasicInfoForm>
+          <BasicInfoForm ></BasicInfoForm>
           <div className="login-enter" onClick={this.enterGameOnClick}>进入游戏</div>
         </header>
       </div>
