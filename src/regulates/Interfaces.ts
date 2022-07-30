@@ -1,10 +1,33 @@
-/* ======== GameInfo ======== */
+/* ======== GameProcess And Signal ======== */
 
-export interface PlayerState {
-  health: number,
-  mana: number,
-  level: number,
+export enum GameStage {
+  PREPARE,
+  BATTLE,
+  ACTION,
+  END,
 }
+
+export enum GameStep {
+  GAME_START,
+  UNTAP,
+  TURN_START,
+  PRACTICE,
+  BATTLE_START,
+  ATTACK,
+  ACTION_START,
+  FREE_ACTION,
+  TURN_END,
+  DISCARD,
+  GAME_END,
+}
+
+export enum GameResult {
+  AWIN,
+  BWIN,
+  DRAW,
+}
+
+/* ======== GameInfo ======== */
 
 export interface CardState {
   name: string,
@@ -15,26 +38,29 @@ export interface CardState {
   sectID: number,
   level: number,
   typeID: number,
+  rarity: number,
+  UID: number,
 }
+
+export interface PlayerState {
+  basicState: {
+    health: number,
+    mana: number,
+    level: number,
+  },
+  groundState: Record<string, CardState[]>,
+}
+
+/* ======== GameState ======== */
 
 export interface GameState {
   playerState: PlayerState[],
-  myGroundState: {
-    sorceryState: CardState[],
-    equipmentState: CardState[],
-    zisurruState: CardState[],
-    libraryState: CardState[],
-    graveyardState: CardState[],
-    blackholeState: CardState[],
+  automatonState: {
+    stage: GameStage,
+    step: GameStep,
+    /* 0: Alice, 1: Bob */
+    priority: number,
+    turn: number,
+    round: number,
   }
-  myHandState: CardState[],
-  rivalGroundState: {
-    sorceryState: CardState[],
-    equipmentState: CardState[],
-    zisurruState: CardState[],
-    libraryState: CardState[],
-    graveyardState: CardState[],
-    blackholeState: CardState[],
-  }
-  rivalHandState: CardState[],
 }

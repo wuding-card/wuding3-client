@@ -171,63 +171,69 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
   }
 
   render() {
-    const gameState = this.props.gameState;
+    console.log(this.props.gameState);
+    const playerState = this.props.gameState.playerState;
+    console.log(this.props.gameState.playerState);
+    const myBasicState = playerState[0].basicState;
+    const rivalBasicState = playerState[1].basicState;
+    const myGroundState = playerState[0].groundState;
+    const rivalGroundState = playerState[1].groundState;
     return (
       <div className="game-scene">
         <div className="my-displayer">
           <div className="my-sorcery">
-            {this.groundCardGenerator(gameState.myGroundState.sorceryState, 8, true)}
+            {this.groundCardGenerator(myGroundState.sorceryState, 8, true)}
           </div>
           <div className="my-zisurru">
-            {this.groundCardGenerator(gameState.myGroundState.zisurruState, 3, true)}
+            {this.groundCardGenerator(myGroundState.zisurruState, 3, true)}
           </div>
           <div className="my-equipment">
-            {this.groundCardGenerator(gameState.myGroundState.equipmentState, 3, true)}
+            {this.groundCardGenerator(myGroundState.equipmentState, 3, true)} {/* Is Record visitiable by this? */}
           </div>
           <div className="my-library">
-            {gameState.myGroundState.libraryState.length}
+            {myGroundState.libraryState.length}
           </div>
           <div className="my-graveyard">
-            {gameState.myGroundState.graveyardState.length}
+            {myGroundState.graveyardState.length}
           </div>
           <div className="my-blackhole">
-            {gameState.myGroundState.blackholeState.length}
+            {myGroundState.blackholeState.length}
           </div>
           <div className="my-hand">
-            {this.handCardGenerator(gameState.myHandState, true)}
+            {this.handCardGenerator(myGroundState.handState, true)}
           </div>
           <div className="my-info">
-            <p>{"命火: " + gameState.playerState[0].health}</p>
-            <p>{"灵力: " + gameState.playerState[0].mana}</p>
-            <p>{"修为: " + showLevel(gameState.playerState[0].level)}</p>
+            <p>{"命火: " + myBasicState.health}</p>
+            <p>{"灵力: " + myBasicState.mana}</p>
+            <p>{"修为: " + showLevel(myBasicState.level)}</p>
           </div>
         </div>
         <div className="rival-displayer">
           <div className="rival-sorcery">
-            {this.groundCardGenerator(gameState.myGroundState.sorceryState, 8, false)}
+            {this.groundCardGenerator(rivalGroundState.sorceryState, 8, false)}
           </div>
           <div className="rival-zisurru">
-            {this.groundCardGenerator(gameState.myGroundState.zisurruState, 3, false)}
+            {this.groundCardGenerator(rivalGroundState.zisurruState, 3, false)}
           </div>
           <div className="rival-equipment">
-            {this.groundCardGenerator(gameState.myGroundState.equipmentState, 3, false)}
+            {this.groundCardGenerator(rivalGroundState.equipmentState, 3, false)}
           </div>
           <div className="rival-library">
-            {gameState.myGroundState.libraryState.length}
+            {rivalGroundState.libraryState.length}
           </div>
           <div className="rival-graveyard">
-            {gameState.myGroundState.graveyardState.length}
+            {rivalGroundState.graveyardState.length}
           </div>
           <div className="rival-blackhole">
-            {gameState.myGroundState.blackholeState.length}
+            {rivalGroundState.blackholeState.length}
           </div>
           <div className="rival-hand">
-            {this.handCardGenerator(gameState.myHandState, false)}
+            {this.handCardGenerator(rivalGroundState.handState, false)}
           </div>
           <div className="rival-info">
-            <p>{"命火: " + gameState.playerState[0].health}</p>
-            <p>{"灵力: " + gameState.playerState[0].mana}</p>
-            <p>{"修为: " + showLevel(gameState.playerState[0].level)}</p>
+            <p>{"命火: " + rivalBasicState.health}</p>
+            <p>{"灵力: " + rivalBasicState.mana}</p>
+            <p>{"修为: " + showLevel(rivalBasicState.level)}</p>
           </div>
         </div>
         {this.state.showingCard!=null?<CardDetail cardState={this.state.showingCard} />:null}

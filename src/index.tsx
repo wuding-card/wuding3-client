@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { socket } from './communication/connection';
+
+socket.on("confirm-connect", (arg) => {
+  console.log(socket.id);
+});
 
 ReactDOM.render(
   <React.StrictMode>
