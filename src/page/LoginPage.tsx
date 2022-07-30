@@ -122,8 +122,8 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
             formClassName='basic-info-form'
             formButtonOnClick={this.userLoginOnClick}/>
           <BasicInfoForm
-            formName='房间创建'
-            buttonName='创建'
+            formName='房间号'
+            buttonName='创建/进入'
             formVariables={{
               roomName: "Room-" + getUUID(),
             }}
