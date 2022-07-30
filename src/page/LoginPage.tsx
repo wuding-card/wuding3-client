@@ -66,7 +66,7 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
         <form className="basic-info-form">
           <label>
             {this.props.formName}
-            {this.inputGenerator(this.props.formVariables)}
+            {this.inputGenerator(this.state.value)}
           </label>
         </form>
         <div className="basic-info-button" onClick={this.buttonClick}>{this.props.buttonName}</div>
@@ -79,13 +79,16 @@ interface LoginPageProps {
   setPage: (val: string) => void,
   setGameState: (gameState: GameState) => void,
   setUserName: (val: string) => void,
+  setRoomState: (val: any) => void,
 }
 
 class LoginPage extends React.Component<LoginPageProps,{}> {
+  randomRoomName = "Room-" + getUUID();
   constructor(props: any) {
     super(props);
     this.enterGameOnClick = this.enterGameOnClick.bind(this);
     this.userLoginOnClick = this.userLoginOnClick.bind(this);
+    this.enterRoomOnClick = this.enterRoomOnClick.bind(this);
   }
 
   enterGameOnClick(info: Record<string, string>){
@@ -105,7 +108,11 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
   }
 
   enterRoomOnClick(info: Record<string, string>) {
-
+    socket.emit("join-room", info["roomName"]);
+    socket.on("join-room-successful", (args) => {
+      console.log(args);
+      this.props.setRoomState(args);
+    })
   }
 
   render() {
@@ -125,10 +132,10 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
             formName='房间号'
             buttonName='创建/进入'
             formVariables={{
-              roomName: "Room-" + getUUID(),
+              roomName: this.randomRoomName,
             }}
             formClassName='basic-info-form'
-            formButtonOnClick={this.enterGameOnClick}/>
+            formButtonOnClick={this.enterRoomOnClick}/>
         </header>
       </div>
     );

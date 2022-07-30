@@ -11,6 +11,7 @@ interface AppState {
   userName: string,
   pageName: string,
   gameState: GameState,
+  roomState: any,
 }
 
 class App extends React.PureComponent<{},AppState> {
@@ -20,7 +21,8 @@ class App extends React.PureComponent<{},AppState> {
   }
   // Todo: setRoomState
   setRoomState(val: any) {
-
+    this.setState({roomState: val});
+    console.log(val);
   }
 
   setGameState(val: GameState) {
@@ -45,18 +47,24 @@ class App extends React.PureComponent<{},AppState> {
           turn: 0,
           round: 0,
         }
-      }
+      },
+      roomState: null,
     };
     this.setPage = this.setPage.bind(this);
     this.setGameState = this.setGameState.bind(this);
     this.setUserName = this.setUserName.bind(this);
+    this.setRoomState = this.setRoomState.bind(this);
   }
 
   render() {
     switch(this.state.pageName){
       case "LoginPage":{
         return (
-          <LoginPage setUserName={this.setUserName} setPage={this.setPage} setGameState={this.setGameState}></LoginPage>
+          <LoginPage
+            setUserName={this.setUserName}
+            setPage={this.setPage}
+            setGameState={this.setGameState}
+            setRoomState={this.setRoomState}></LoginPage>
         );
       }
       case "GamePage":{
