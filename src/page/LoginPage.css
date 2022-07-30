@@ -18,3 +18,16 @@
 .basic-info-form {
   margin: 20px;
 }
+
+.basic-info-input {
+  margin: 0 .3em;
+}
+
+.basic-info-button {
+  margin: 0 200px;
+  padding: 0.1em 0.2em;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #66BAB7;
+  border-radius: 0.5em;
+}
