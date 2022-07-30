@@ -76,43 +76,33 @@ class BasicInfoForm extends React.Component<FormProps,FormState> {
 }
 
 interface LoginPageProps {
-  setPage: (val: string) => void,
-  setGameState: (gameState: GameState) => void,
-  setUserName: (val: string) => void,
-  setRoomState: (val: any) => void,
+  userName: string,
 }
 
 class LoginPage extends React.Component<LoginPageProps,{}> {
   randomRoomName = "Room-" + getUUID();
   constructor(props: any) {
     super(props);
-    this.enterGameOnClick = this.enterGameOnClick.bind(this);
+    // this.enterGameOnClick = this.enterGameOnClick.bind(this);
     this.userLoginOnClick = this.userLoginOnClick.bind(this);
     this.enterRoomOnClick = this.enterRoomOnClick.bind(this);
   }
 
-  enterGameOnClick(info: Record<string, string>){
-    socket.emit("enter-game",info);
-    socket.on("renew-game-state", (args) => {
-      console.log(args);
-      this.props.setGameState(args.state);
-      this.props.setPage("GamePage");
-    });
-  }
+  // enterGameOnClick(info: Record<string, string>){
+  //   socket.emit("enter-game",info);
+  //   socket.on("renew-game-state", (args) => {
+  //     console.log(args);
+  //     this.props.setGameState(args.state);
+  //     this.props.setPage("GamePage");
+  //   });
+  // }
 
   userLoginOnClick(info: Record<string, string>) {
     socket.emit("user-login", info["userName"]);
-    socket.on("user-login-successful", (args) => {
-      this.props.setUserName(args);
-    })
   }
 
   enterRoomOnClick(info: Record<string, string>) {
     socket.emit("join-room", info["roomName"]);
-    socket.on("join-room-successful", (args) => {
-      console.log(args);
-      this.props.setRoomState(args);
-    })
   }
 
   render() {
@@ -124,7 +114,7 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
             formName='用户登陆'
             buttonName='登陆'
             formVariables={{
-              userName: "匿名",
+              userName: this.props.userName,
             }}
             formClassName='basic-info-form'
             formButtonOnClick={this.userLoginOnClick}/>

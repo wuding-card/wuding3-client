@@ -6,6 +6,7 @@ import ErrorPage from './page/ErrorPage';
 import GamePage from './page/GamePage';
 import { CardState, GameStage, GameState, GameStep, PlayerState} from './regulates/interfaces'
 import { socket } from './communication/connection';
+import { RoomPage } from './page/RoomPage';
 
 interface AppState {
   userName: string,
@@ -22,7 +23,6 @@ class App extends React.PureComponent<{},AppState> {
   // Todo: setRoomState
   setRoomState(val: any) {
     this.setState({roomState: val});
-    console.log(val);
   }
 
   setGameState(val: GameState) {
@@ -36,7 +36,7 @@ class App extends React.PureComponent<{},AppState> {
     super(props);
     this.state = {
       pageName: "LoginPage",
-      userName: "未登陆",
+      userName: "请登录",
       gameState: {
         playerState: [],
         automatonState: {
@@ -57,19 +57,29 @@ class App extends React.PureComponent<{},AppState> {
   }
 
   render() {
+    // Register listeners on the messages that changes the whole application.
+    socket.on("user-login-successful", (args) => {
+      this.setUserName(args);
+    })
+    socket.on("renew-room-state", (args) => {
+      this.setRoomState(args);
+      this.setPage("RoomPage");
+    })
     switch(this.state.pageName){
       case "LoginPage":{
         return (
           <LoginPage
-            setUserName={this.setUserName}
-            setPage={this.setPage}
-            setGameState={this.setGameState}
-            setRoomState={this.setRoomState}></LoginPage>
+            userName={this.state.userName}></LoginPage>
         );
       }
       case "GamePage":{
         return (
           <GamePage gameState={this.state.gameState}></GamePage>
+        );
+      }
+      case "RoomPage":{
+        return (
+          <RoomPage></RoomPage>
         );
       }
       default:{
