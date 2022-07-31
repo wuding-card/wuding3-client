@@ -1,5 +1,7 @@
 /* ======== GameProcess And Signal ======== */
 
+import { Deck } from "./type";
+
 export enum GameStage {
   PREPARE,
   BATTLE,
@@ -63,4 +65,14 @@ export interface GameState {
     turn: number,
     round: number,
   }
+}
+
+/* ======== RoomState ======== */
+export interface RoomState {
+  roomName: string,
+  users: (string | null)[],
+  decks: ({
+    name: string,
+    deck: Deck,
+  })[],
 }

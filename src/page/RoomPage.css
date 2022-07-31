@@ -1,0 +1,92 @@
+.room-scene {
+  min-width: 100vh;
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: baseline;
+  font-size: calc(16px + vmin);
+  color: white;
+}
+
+.room-title {
+  margin: .75em;
+  font-size: 32px;
+}
+
+.room-body {
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.room-user-box {
+  width: 30%;
+  height: 100%;
+  margin: 1em;
+  font-size: 40px;
+  border-style: solid;
+  border-color: #66BAB7;
+  border-width: 5px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.room-user-box-left {
+  left: 5em;
+}
+.room-user-box-right {
+  right: 5em;
+}
+
+.room-user-name {
+
+}
+
+.room-user-deck-box {
+
+}
+
+.room-user-deck-title {
+
+}
+
+.room-user-deck-card {
+  border-radius: 12px;
+  height: 240px;
+  width: 200px;
+  box-shadow: 4px 8px 20px 0px rgba(255, 255, 255, 0.5);
+  
+  margin: .8em;
+
+  background-image:url('../assets/backgrounds/card-back.png');
+  background-repeat: no-repeat;
+  background-size:100% 100%;
+}
+
+.room-bottom {
+  margin: .5em;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.room-button {
+  margin: 1em 8em;
+  padding: .3em;
+  font-size: 28px;
+  border-style: solid;
+  border-color: #66BAB7;
+  border-width: 2px;
+  border-radius: 15px;
+}

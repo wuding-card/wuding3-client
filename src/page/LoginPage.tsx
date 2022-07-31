@@ -88,15 +88,6 @@ class LoginPage extends React.Component<LoginPageProps,{}> {
     this.enterRoomOnClick = this.enterRoomOnClick.bind(this);
   }
 
-  // enterGameOnClick(info: Record<string, string>){
-  //   socket.emit("enter-game",info);
-  //   socket.on("renew-game-state", (args) => {
-  //     console.log(args);
-  //     this.props.setGameState(args.state);
-  //     this.props.setPage("GamePage");
-  //   });
-  // }
-
   userLoginOnClick(info: Record<string, string>) {
     socket.emit("user-login", info["userName"]);
   }

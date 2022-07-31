@@ -4,7 +4,7 @@ import internal from 'stream';
 import LoginPage from './page/LoginPage';
 import ErrorPage from './page/ErrorPage';
 import GamePage from './page/GamePage';
-import { CardState, GameStage, GameState, GameStep, PlayerState} from './regulates/interfaces'
+import { CardState, GameStage, GameState, GameStep, PlayerState, RoomState} from './regulates/interfaces'
 import { socket } from './communication/connection';
 import { RoomPage } from './page/RoomPage';
 
@@ -12,7 +12,7 @@ interface AppState {
   userName: string,
   pageName: string,
   gameState: GameState,
-  roomState: any,
+  roomState: RoomState,
 }
 
 class App extends React.PureComponent<{},AppState> {
@@ -21,7 +21,7 @@ class App extends React.PureComponent<{},AppState> {
     this.setState({pageName: val});
   }
   // Todo: setRoomState
-  setRoomState(val: any) {
+  setRoomState(val: RoomState) {
     this.setState({roomState: val});
   }
 
@@ -48,23 +48,43 @@ class App extends React.PureComponent<{},AppState> {
           round: 0,
         }
       },
-      roomState: null,
+      roomState: {
+        roomName: "",
+        users: [],
+        decks: [],
+      },
     };
     this.setPage = this.setPage.bind(this);
     this.setGameState = this.setGameState.bind(this);
     this.setUserName = this.setUserName.bind(this);
     this.setRoomState = this.setRoomState.bind(this);
-  }
 
-  render() {
     // Register listeners on the messages that changes the whole application.
+    
+    socket.on("renew-game-state", (args) => {
+      console.log(args);
+      this.setGameState(args.state);
+      this.setPage("GamePage");
+    });
     socket.on("user-login-successful", (args) => {
       this.setUserName(args);
-    })
+    });
     socket.on("renew-room-state", (args) => {
       this.setRoomState(args);
       this.setPage("RoomPage");
-    })
+    });
+    socket.on("leave-room-successful", () => {
+      this.setPage("LoginPage");
+      this.setRoomState({
+        roomName: "",
+        users: [],
+        decks: [],
+      });
+    });
+  }
+
+  render() {
+    
     switch(this.state.pageName){
       case "LoginPage":{
         return (
@@ -78,8 +98,9 @@ class App extends React.PureComponent<{},AppState> {
         );
       }
       case "RoomPage":{
+        console.log("roompage");
         return (
-          <RoomPage></RoomPage>
+          <RoomPage roomState = {this.state.roomState}></RoomPage>
         );
       }
       default:{

@@ -367,10 +367,10 @@ p {
 
 .card-hand, .card-hand-facedown {
   writing-mode: vertical-rl;
+  margin-right: -40px;
   border-radius: 12px;
   width: 100px;
   height: 120px;
-  margin-right: -40px;
   box-shadow: 4px 8px 20px 0px rgba(0, 0, 0, 0.25);
   color: #000000;
 }
