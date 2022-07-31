@@ -1,8 +1,31 @@
+import { timeStamp } from "console";
 import React from "react";
 import { socket } from "../communication/connection";
 import { RoomState } from "../regulates/interfaces";
 import { Deck } from "../regulates/type";
 import './RoomPage.css';
+
+interface DeckDetailProps {
+  deck: Deck,
+  closeBtnOnClick: () => void,
+}
+
+class DeckDetail extends React.Component<DeckDetailProps, {}> {
+  deckEntryGenerator(deck: Deck) {
+    return deck.map(item => <div className="deck-entry">{item}</div>);
+  }
+  render(): React.ReactNode {
+    return (
+      <div className="deck-detail-filter">
+        <div className="deck-detail-box">
+          {this.deckEntryGenerator(this.props.deck)}
+          <div className="close-deck-detail-box" onClick={this.props.closeBtnOnClick}>✖</div>
+        </div>
+      </div>
+    );
+  }
+}
+
 interface DeckShowerProps {
   info: {
     name: string,
@@ -10,17 +33,37 @@ interface DeckShowerProps {
   }
 }
 
-class DeckShower extends React.Component<DeckShowerProps, {}> {
+interface DeckShowerState {
+  showDetail: boolean,
+}
+
+class DeckShower extends React.Component<DeckShowerProps, DeckShowerState> {
   
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      showDetail: false
+    }
+    this.detailVisualitySetter = this.detailVisualitySetter.bind(this);
+  }
+
+  detailVisualitySetter(val: boolean) {
+    this.setState({
+      showDetail: val,
+    });
+  }
+
   render(): React.ReactNode {
     return (
       <div className="room-user-deck-box">
         <div className="room-user-deck-title">
           {this.props.info.name}
         </div>
-        <div className="room-user-deck-card">
-
+        <div className="room-user-deck-card" onClick = {() => this.detailVisualitySetter(true)}>
         </div>
+        {this.state.showDetail? <DeckDetail
+          deck={this.props.info.deck}
+          closeBtnOnClick = {() => this.detailVisualitySetter(false)}/>: <div></div>}
       </div>
     );
   }
@@ -40,6 +83,10 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
   startGameOnClick() {
     socket.emit('room-start-game');
   }
+  
+  // swapUserOnClick() {
+  //   socket.emit('swap-room-user')
+  // }
 
   leaveRoomOnClick() {
     socket.emit('leave-room');
@@ -66,6 +113,9 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
           <div className="room-button" onClick = {this.startGameOnClick}>
             进入游戏
           </div>
+          {/* <div className="room-button" onClick = {this.swapUserOnClick}>
+            交换位置
+          </div> */}
           <div className="room-button" onClick = {this.leaveRoomOnClick}>
             退出房间
           </div>
