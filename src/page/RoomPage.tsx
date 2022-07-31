@@ -77,6 +77,7 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
   constructor(props: any) {
     super(props);
     this.startGameOnClick = this.startGameOnClick.bind(this);
+    this.swapUserOnClick = this.swapUserOnClick.bind(this);
     this.leaveRoomOnClick = this.leaveRoomOnClick.bind(this);
   }
 
@@ -84,9 +85,9 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
     socket.emit('room-start-game');
   }
   
-  // swapUserOnClick() {
-  //   socket.emit('swap-room-user')
-  // }
+  swapUserOnClick() {
+    socket.emit('swap-room-user');
+  }
 
   leaveRoomOnClick() {
     socket.emit('leave-room');
@@ -113,9 +114,9 @@ export class RoomPage extends React.Component<RoomPageProps,{}> {
           <div className="room-button" onClick = {this.startGameOnClick}>
             进入游戏
           </div>
-          {/* <div className="room-button" onClick = {this.swapUserOnClick}>
+          <div className="room-button" onClick = {this.swapUserOnClick}>
             交换位置
-          </div> */}
+          </div>
           <div className="room-button" onClick = {this.leaveRoomOnClick}>
             退出房间
           </div>
