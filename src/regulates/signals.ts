@@ -63,9 +63,15 @@ export enum IterateSignalType {
   ERROR,
   GAME_END,
 }
-export interface IterateSignal {
-  type: IterateSignalType,
-  state: [number,PlayerOperation] | ErrorSignal | GameResult,
+export type IterateSignal = {
+  type: IterateSignalType.REQUEST,
+  state: [number,PlayerOperation],
+} | {
+  type: IterateSignalType.ERROR,
+  state: ErrorSignal,
+} | {
+  type: IterateSignalType.GAME_END,
+  state: GameResult,
 }
 export type PracticeState = number;
 export type FreeActionState = {

@@ -4,8 +4,9 @@ import gameBackground from '../assets/game-background.png';
 import './GamePage.css';
 import internal from 'stream';
 import { assert, countReset } from 'console';
-import { CardState, GameState, PlayerState} from '../regulates/interfaces';
+import { CardState, GameStage, GameState, GameStep, PlayerState} from '../regulates/interfaces';
 import { numberAbbr, counterTranslate, showSect, showType, showLevel, getDescription, attributeTranslate } from '../regulates/utils';
+import { PopupBtn } from './Composition';
 
 const attributesWithoutCost = ["power","durability","defense"];
 const attributesList = ["power","durability","defense","castCost","maintainCost"];
@@ -139,6 +140,32 @@ class CardHand extends React.Component<CardHandProps,{}> {
   }
 }
 
+interface GameProgressInfoProps {
+  state: {
+    stage: GameStage,
+    step: GameStep,
+    /* 0: Alice, 1: Bob */
+    priority: number,
+    turn: number,
+    round: number,
+  }
+}
+
+class GameProgressInfo extends React.Component<GameProgressInfoProps, {}> {
+  render(): React.ReactNode {
+    const automatonState = this.props.state;
+    return (
+      <div className='process-detail'>
+        <div className='process-game'>
+          {"Round: " + automatonState.round + ", Stage: " + automatonState.stage + ", Step: " + automatonState.step}
+        </div>
+        <div className='process-priority'>
+          {"Turn Owner: " + (automatonState.turn? "Alice": "Bob") + ", Priority Owner: " + (automatonState.priority? "Alice": "Bob")}
+        </div>
+      </div>
+    );
+  }
+}
 interface GamePageProps {
   gameState: GameState,
 }
@@ -171,15 +198,21 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
   }
 
   render() {
-    console.log(this.props.gameState);
     const playerState = this.props.gameState.playerState;
-    console.log(this.props.gameState.playerState);
     const myBasicState = playerState[0].basicState;
     const rivalBasicState = playerState[1].basicState;
     const myGroundState = playerState[0].groundState;
     const rivalGroundState = playerState[1].groundState;
+    const automatonState = this.props.gameState.automatonState;
     return (
       <div className="game-scene">
+        <div className='progress-displayer'>
+          <PopupBtn btnComponent={
+            <div className='progress-info-btn'>i</div>
+          } windowComponent = {
+            <GameProgressInfo state = {automatonState}/>
+          }/>
+        </div>
         <div className="my-displayer">
           <div className="my-sorcery">
             {this.groundCardGenerator(myGroundState.sorceryState, 8, true)}

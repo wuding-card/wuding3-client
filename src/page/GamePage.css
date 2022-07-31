@@ -22,10 +22,10 @@ p {
   background-repeat: no-repeat;
   background-size:100% 100%;
   min-height: 97vh;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
   font-size: calc(16px + vmin);
   color: white;
 
@@ -393,4 +393,24 @@ p {
 
 .rival-hand .card-hand-facedown .card-hand-name {
   font-size: 0px;
+}
+
+/* ======== Progress Info ======== */
+
+.progress-displayer {
+  padding: 5px;
+}
+
+.progress-info-btn {
+	height: 3rem;
+	width: 3rem;
+
+	font-size: 2rem;
+	text-align: center;
+	color: #868800;
+	user-select: none;
+
+	border: 2px solid #868800;
+	border-radius: 999px;
+	background-color: #ffffff;
 }

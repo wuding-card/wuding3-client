@@ -3,28 +3,8 @@ import React from "react";
 import { socket } from "../communication/connection";
 import { RoomState } from "../regulates/interfaces";
 import { Deck } from "../regulates/type";
+import { PopupBtn } from "./Composition";
 import './RoomPage.css';
-
-interface DeckDetailProps {
-  deck: Deck,
-  closeBtnOnClick: () => void,
-}
-
-class DeckDetail extends React.Component<DeckDetailProps, {}> {
-  deckEntryGenerator(deck: Deck) {
-    return deck.map(item => <div className="deck-entry">{item}</div>);
-  }
-  render(): React.ReactNode {
-    return (
-      <div className="deck-detail-filter">
-        <div className="deck-detail-box">
-          {this.deckEntryGenerator(this.props.deck)}
-          <div className="close-deck-detail-box" onClick={this.props.closeBtnOnClick}>✖</div>
-        </div>
-      </div>
-    );
-  }
-}
 
 interface DeckShowerProps {
   info: {
@@ -33,37 +13,21 @@ interface DeckShowerProps {
   }
 }
 
-interface DeckShowerState {
-  showDetail: boolean,
-}
-
-class DeckShower extends React.Component<DeckShowerProps, DeckShowerState> {
+class DeckShower extends React.Component<DeckShowerProps> {
   
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      showDetail: false
-    }
-    this.detailVisualitySetter = this.detailVisualitySetter.bind(this);
-  }
-
-  detailVisualitySetter(val: boolean) {
-    this.setState({
-      showDetail: val,
-    });
-  }
-
   render(): React.ReactNode {
+    const getEntryByDeck = (deck: Deck) => deck.map(item => <div className="deck-entry">{item}</div>);
     return (
       <div className="room-user-deck-box">
         <div className="room-user-deck-title">
           {this.props.info.name}
         </div>
-        <div className="room-user-deck-card" onClick = {() => this.detailVisualitySetter(true)}>
-        </div>
-        {this.state.showDetail? <DeckDetail
-          deck={this.props.info.deck}
-          closeBtnOnClick = {() => this.detailVisualitySetter(false)}/>: <div></div>}
+        <PopupBtn btnComponent={
+            <div className="room-user-deck-card"></div>
+          } windowComponent={
+            getEntryByDeck(this.props.info.deck)
+          }>
+        </PopupBtn>
       </div>
     );
   }
