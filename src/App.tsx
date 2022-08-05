@@ -7,11 +7,13 @@ import GamePage from './page/GamePage';
 import { CardState, GameStage, GameState, GameStep, PlayerState, RoomState} from './regulates/interfaces'
 import { socket } from './communication/connection';
 import { RoomPage } from './page/RoomPage';
+import { PlayerOperation } from './regulates/signals';
 
 interface AppState {
   userName: string,
   pageName: string,
   gameState: GameState,
+  signal: PlayerOperation,
   roomState: RoomState,
 }
 
@@ -27,6 +29,10 @@ class App extends React.PureComponent<{},AppState> {
 
   setGameState(val: GameState) {
     this.setState({gameState: val});
+  }
+
+  setSignal(val: PlayerOperation) {
+    this.setState({signal: val});
   }
 
   setUserName(val: string) {
@@ -48,6 +54,7 @@ class App extends React.PureComponent<{},AppState> {
           round: 0,
         }
       },
+      signal: PlayerOperation.NONE,
       roomState: {
         roomName: "",
         users: [],
@@ -62,8 +69,14 @@ class App extends React.PureComponent<{},AppState> {
     // Register listeners on the messages that changes the whole application.
     
     socket.on("renew-game-state", (args) => {
-      console.log(args);
       this.setGameState(args.state);
+      console.log(args);
+      if(args.signal === PlayerOperation.NONE) {
+        this.setSignal(PlayerOperation.NONE);
+        socket.emit("player-signal-ingame", {type: PlayerOperation.NONE, state: null});
+      }else{
+        this.setSignal(args.signal);
+      }
       this.setPage("GamePage");
     });
     socket.on("user-login-successful", (args) => {
@@ -94,7 +107,7 @@ class App extends React.PureComponent<{},AppState> {
       }
       case "GamePage":{
         return (
-          <GamePage gameState={this.state.gameState}></GamePage>
+          <GamePage gameState={this.state.gameState} signal={this.state.signal}></GamePage>
         );
       }
       case "RoomPage":{

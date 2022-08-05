@@ -6,10 +6,54 @@ import internal from 'stream';
 import { assert, countReset } from 'console';
 import { CardState, GameStage, GameState, GameStep, PlayerState} from '../regulates/interfaces';
 import { numberAbbr, counterTranslate, showSect, showType, showLevel, getDescription, attributeTranslate } from '../regulates/utils';
-import { PopupBtn } from './Composition';
+import { FilterBackground, PopupBtn } from './Composition';
+import { DEBUG_MODE } from '../regulates/settings';
+import { FreeOperation, InstantOperation, PlayerOperation } from '../regulates/signals';
+import { sign } from 'crypto';
+import { socket } from '../communication/connection';
+import PlayerFunction from '../action/PlayerFunction';
 
 const attributesWithoutCost = ["power","durability","defense"];
 const attributesList = ["power","durability","defense","castCost","maintainCost"];
+
+function getPriorityName(id: number) {
+  return id === 1? "Bob": "Alice";
+}
+
+class PracticeChoiceWindow extends React.Component {
+  practiceChoose(val: number) {
+    PlayerFunction.playerSignalIngame({
+      type: PlayerOperation.PRACTICE,
+      state: val,
+    });
+  }
+  render(): React.ReactNode {
+    return(
+      <PopupBtn
+        btnComponent={
+          <div className='practice-choice-btn'>
+            修炼
+          </div>
+        }
+        windowComponent={
+          <div className='practice-choice-window'>
+            <div className='practice-choice-title'>选择修炼方式</div>
+            <div className='practice-choice-list'>
+              <div className='practice-choice-erudio practice-choice-option' onClick={() => this.practiceChoose(0)}>
+                <div className='practice-choice-option-title'>博闻</div>
+                <div className='practice-choice-desc'>抽 2 张牌</div>
+              </div>
+              <div className='practice-choice-askesis practice-choice-option' onClick={() => this.practiceChoose(1)}>
+                <div className='practice-choice-option-title'>潜修</div>
+                <div className='practice-choice-desc'>加 1 修为</div>
+              </div>
+            </div>
+          </div>
+        }
+      />
+    );
+  }
+}
 
 interface CardDetailInfoProps {
   name: string,
@@ -149,6 +193,7 @@ interface GameProgressInfoProps {
     turn: number,
     round: number,
   }
+  signal: PlayerOperation,
 }
 
 class GameProgressInfo extends React.Component<GameProgressInfoProps, {}> {
@@ -160,14 +205,18 @@ class GameProgressInfo extends React.Component<GameProgressInfoProps, {}> {
           {"Round: " + automatonState.round + ", Stage: " + automatonState.stage + ", Step: " + automatonState.step}
         </div>
         <div className='process-priority'>
-          {"Turn Owner: " + (automatonState.turn? "Alice": "Bob") + ", Priority Owner: " + (automatonState.priority? "Alice": "Bob")}
+          {"Turn Owner: " + (getPriorityName(automatonState.turn)) + ", Priority Owner: " + (getPriorityName(automatonState.priority))}
         </div>
+        {DEBUG_MODE? <div className='waiting-signal'>
+          {"Waiting Signal: " + this.props.signal}
+        </div> : <div/>}
       </div>
     );
   }
 }
 interface GamePageProps {
   gameState: GameState,
+  signal: PlayerOperation,
 }
 
 interface GamePageState {
@@ -204,14 +253,52 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     const myGroundState = playerState[0].groundState;
     const rivalGroundState = playerState[1].groundState;
     const automatonState = this.props.gameState.automatonState;
+    const signal = this.props.signal;
+    switch(signal) {
+      case PlayerOperation.FREE_ACTION: {
+        PlayerFunction.playerSignalIngame({
+          type: PlayerOperation.FREE_ACTION,
+          state: {
+            type: FreeOperation.PASS,
+            state: null,
+          }
+        })
+        break;
+      }
+      case PlayerOperation.INSTANT_ACTION: {
+        PlayerFunction.playerSignalIngame({
+          type: PlayerOperation.INSTANT_ACTION,
+          state: {
+            type: InstantOperation.PASS,
+            state: null,
+          }
+        })
+        break;
+      }
+      case PlayerOperation.ATTACK: {
+        PlayerFunction.playerSignalIngame({
+          type: PlayerOperation.ATTACK,
+          state: {},
+        })
+        break;
+      }
+      case PlayerOperation.DISCARD: {
+        PlayerFunction.playerSignalIngame({
+          type: PlayerOperation.DISCARD,
+          state: [],
+        })
+        break;
+      }
+    }
     return (
       <div className="game-scene">
         <div className='progress-displayer'>
           <PopupBtn btnComponent={
             <div className='progress-info-btn'>i</div>
           } windowComponent = {
-            <GameProgressInfo state = {automatonState}/>
+            <GameProgressInfo state = {automatonState} signal = {signal}/>
           }/>
+          {signal === PlayerOperation.PRACTICE? <PracticeChoiceWindow/>: <div/>}
         </div>
         <div className="my-displayer">
           <div className="my-sorcery">

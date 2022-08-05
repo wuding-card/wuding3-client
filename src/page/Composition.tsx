@@ -6,15 +6,25 @@ export interface PopupWindowProps {
 
 }
 
+export class FilterBackground extends React.Component {
+  render(): React.ReactNode {
+    return (
+      <div className="filter-background">
+        {this.props.children}
+      </div>
+    )
+  }
+}
+
 export class PopupWindow extends React.Component<PopupWindowProps,{}> {
   render(): React.ReactNode {
     return (
-      <div className='popup-background'>
+      <FilterBackground>
         <div className='popup-window'>
           {this.props.children}
           <div className='popup-close' onClick={this.props.popupCloseOnClick}>✖</div>
         </div>
-      </div>
+      </FilterBackground>
     );
   }
 }

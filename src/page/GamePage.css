@@ -414,3 +414,56 @@ p {
 	border-radius: 999px;
 	background-color: #ffffff;
 }
+
+/* ======== Practice Window ======== */
+.practice-choice-window {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.practice-choice-btn {
+  margin: .2rem;
+	width: 3rem;
+
+	font-size: 1.2rem;
+	text-align: center;
+	color: #ab00ab;
+	user-select: none;
+
+	border: 2px solid #ab00ab;
+	background-color: #ffa2e3;
+}
+
+.practice-choice-title {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.practice-choice-list {
+  margin: .5em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.practice-choice-option {
+  margin: 1em;
+  padding: .2em;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+	user-select: none;
+
+	border: 2px solid #ab00ab;
+  border-radius: 1em;
+	background-color: #1550ff;
+}
+
+.practice-choice-option-title {
+
+  font-size: 4em;
+}
