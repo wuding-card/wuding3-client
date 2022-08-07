@@ -457,10 +457,11 @@ p {
   align-items: center;
 
 	user-select: none;
+	color: #1550ff;
 
 	border: 2px solid #ab00ab;
   border-radius: 1em;
-	background-color: #1550ff;
+  background-color: #ac7171;
 }
 
 .practice-choice-option-title {
