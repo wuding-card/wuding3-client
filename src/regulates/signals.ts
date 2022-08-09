@@ -80,7 +80,7 @@ export type FreeActionState = {
 } | {
   type: FreeOperation.CAST,
   // state: [number,Target[]],
-  state: [number],
+  state: [number, []],
 }
 export interface InstantActionState {
   type: InstantOperation,

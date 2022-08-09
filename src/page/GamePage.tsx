@@ -5,12 +5,10 @@ import './GamePage.css';
 import internal from 'stream';
 import { assert, countReset } from 'console';
 import { CardState, GameStage, GameState, GameStep, PlayerState} from '../regulates/interfaces';
-import { numberAbbr, counterTranslate, showSect, showType, showLevel, getDescription, attributeTranslate } from '../regulates/utils';
+import { numberAbbr, counterTranslate, showSect, showType, showLevel, getDescription, attributeTranslate, getCardStateByID } from '../regulates/utils';
 import { FilterBackground, PopupBtn } from './Composition';
 import { DEBUG_MODE } from '../regulates/settings';
 import { FreeOperation, InstantOperation, PlayerOperation } from '../regulates/signals';
-import { sign } from 'crypto';
-import { socket } from '../communication/connection';
 import PlayerFunction from '../action/PlayerFunction';
 
 const attributesWithoutCost = ["power","durability","defense"];
@@ -51,6 +49,47 @@ class PracticeChoiceWindow extends React.Component {
           </div>
         }
       />
+    );
+  }
+}
+
+interface PassBtnProps {
+  type: PlayerOperation,
+}
+
+class PassBtn extends React.Component<PassBtnProps,{}> {
+  passAction(type: PlayerOperation) {
+    switch(type){
+      case PlayerOperation.FREE_ACTION: {
+        PlayerFunction.playerSignalIngame({
+          type: PlayerOperation.FREE_ACTION,
+          state: {
+            type: FreeOperation.PASS,
+            state: null,
+          },
+        });
+        break;
+      }
+      case PlayerOperation.INSTANT_ACTION: {
+        PlayerFunction.playerSignalIngame({
+          type: PlayerOperation.INSTANT_ACTION,
+          state: {
+            type: InstantOperation.PASS,
+            state: null,
+          },
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+  render(): React.ReactNode {
+    return (
+      <div className='pass-btn' onClick={() => this.passAction(this.props.type)}>
+        跳过
+      </div>
     );
   }
 }
@@ -118,7 +157,10 @@ class CardDetail extends React.Component<CardDetailProps,{}> {
 }
 
 interface CardDisplayProps {
+  displayType: string,
+  isSpotCard: boolean,
   cardState: CardState,
+  onClick: (val: number) => void,
   onHover: (val: CardState | null) => void,
   lookable: boolean,
 }
@@ -127,60 +169,61 @@ class CardDisplay extends React.Component<CardDisplayProps,{}> {
   render() {
     const cardState = this.props.cardState;
     let ret = (<div className='error-placeholder'></div>);
-    const attributes = [];
-    for(const i of attributesWithoutCost) {
-      if(i in cardState.attribute) {
-        attributes.push(<p className={"card-ground-" + i}>{numberAbbr(cardState.attribute[i])}</p>)
+    let className = '';
+    let mouseEnter = () => {};
+    let mouseLeave = () => {};
+    let inner = [<div className='error-placeholder'></div>];
+    switch(this.props.displayType) {
+      case "battleground": {
+        const attributes = [];
+        for(const i of attributesWithoutCost) {
+          if(i in cardState.attribute) {
+            attributes.push(<p className={"card-ground-" + i}>{numberAbbr(cardState.attribute[i])}</p>)
+          }
+        }
+        if(cardState.faceup) {
+          className = 'card-ground '+(cardState.tapped?'card-ground-tapped':'');
+          mouseEnter = () => {this.props.onHover(cardState);};
+          mouseLeave = () => {this.props.onHover(null);};
+          inner = [
+            <p className={'card-ground-name'}>{cardState.name}</p>
+          ]
+          inner.push(...attributes);
+        } else {
+          className = 'card-ground-facedown '+(cardState.tapped?'card-ground-tapped':'');
+          mouseEnter = this.props.lookable?() => {this.props.onHover(cardState)}:()=>{};
+          mouseLeave = this.props.lookable?() => {this.props.onHover(null);}:()=>{};
+        }
+        break;
+      }
+      case "hand": {
+        inner = [
+          <div className={'card-hand-name'}>
+            {cardState.name}
+          </div>
+        ]
+        if(this.props.lookable) {
+          className = 'card-hand';
+          mouseEnter = () => {this.props.onHover(cardState);};
+          mouseLeave = () => {this.props.onHover(null);}
+        }else{
+          className = cardState.faceup?'card-hand':'card-hand-facedown';
+          mouseEnter = cardState.faceup?() => {this.props.onHover(cardState)}:()=>{};
+          mouseLeave = cardState.faceup?() => {this.props.onHover(null);}:()=>{};
+        }
+        break;
+      }
+      default: {
+        break;
       }
     }
-    if(cardState.faceup) {
-      ret = (
-        <div className={'card-ground '+(cardState.tapped?'card-ground-tapped':'')} 
-        onMouseEnter={() => {this.props.onHover(cardState);}} onMouseLeave={() => {this.props.onHover(null);}}>
-          <p className={'card-ground-name'}>{cardState.name}</p>
-          {attributes}
-          {/* Todo: show counters. */}
-        </div>
-      )
-    } else {
-      ret = (
-        <div className={'card-ground-facedown '+(cardState.tapped?'card-ground-tapped':'')}
-          onMouseEnter={this.props.lookable?() => {this.props.onHover(cardState)}:()=>{}} onMouseLeave={this.props.lookable?() => {this.props.onHover(null);}:()=>{}}>
-        </div>
-      )
-    }
+    className += this.props.isSpotCard? ' is-spot-card': '';
+    ret = (
+      <div className={className} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} onClick={() => this.props.onClick(cardState.UID)}>
+        {inner}
+      </div>
+    )
     return ret;
-  }
-}
-
-interface CardHandProps{
-  cardState: CardState,
-  onHover: (val: CardState | null) => void,
-  lookable: boolean,
-}
-
-class CardHand extends React.Component<CardHandProps,{}> {
-  render() {
-    const cardState = this.props.cardState;
-    if(this.props.lookable) {
-      return (
-        <div className={'card-hand'}
-        onMouseEnter={() => {this.props.onHover(cardState);}} onMouseLeave={() => {this.props.onHover(null);}}>
-          <div className={'card-hand-name'}>
-            {cardState.name}
-          </div>
-        </div>
-      );
-    }else{
-      return (
-        <div className={cardState.faceup?'card-hand':'card-hand-facedown'}
-        onMouseEnter={cardState.faceup?() => {this.props.onHover(cardState)}:()=>{}} onMouseLeave={cardState.faceup?() => {this.props.onHover(null);}:()=>{}}>
-          <div className={'card-hand-name'}>
-            {cardState.name}
-          </div>
-        </div>
-      );
-    }
   }
 }
 
@@ -221,6 +264,7 @@ interface GamePageProps {
 
 interface GamePageState {
   showingCard: CardState | null,
+  spotCardID: number,
 }
 
 class GamePage extends React.Component<GamePageProps,GamePageState> {
@@ -229,21 +273,39 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     super(props);
     this.state = {
       showingCard: null,
+      spotCardID: -1,
     };
     this.setDetailDisplay = this.setDetailDisplay.bind(this);
+    this.setSpotCardID = this.setSpotCardID.bind(this);
+  }
+
+  castSpotCard() {
+    if(this.state.spotCardID !== -1) {
+      PlayerFunction.playerSignalIngame({
+        type: PlayerOperation.FREE_ACTION,
+        state: {
+          type: FreeOperation.CAST,
+          state: [this.state.spotCardID, []],
+        }
+      })
+    }
   }
 
   setDetailDisplay(val: CardState | null) {
     this.setState({showingCard: val});
   }
 
+  setSpotCardID(val: number) {
+    this.setState({spotCardID: (this.state.spotCardID === val? -1: val)});
+  }
+
   groundCardGenerator(arr: CardState[],limit: number,lookable: boolean) {
     console.assert(arr.length <= limit);
-    return arr.map(state => <CardDisplay cardState={state} onHover={this.setDetailDisplay} lookable={lookable}/>);
+    return arr.map(state => <CardDisplay isSpotCard={state.UID === this.state.spotCardID} displayType="battleground" cardState={state} onClick={this.setSpotCardID} onHover={this.setDetailDisplay} lookable={lookable}/>);
   }
 
   handCardGenerator(arr: CardState[],inMyHand: boolean) {
-    return arr.map(state => <CardHand cardState={state} onHover={this.setDetailDisplay} lookable={inMyHand}/>);
+    return arr.map(state => <CardDisplay isSpotCard={state.UID === this.state.spotCardID} displayType="hand" cardState={state} onClick={this.setSpotCardID} onHover={this.setDetailDisplay} lookable={inMyHand}/>);
   }
 
   render() {
@@ -254,17 +316,8 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
     const rivalGroundState = playerState[1].groundState;
     const automatonState = this.props.gameState.automatonState;
     const signal = this.props.signal;
+
     switch(signal) {
-      case PlayerOperation.FREE_ACTION: {
-        PlayerFunction.playerSignalIngame({
-          type: PlayerOperation.FREE_ACTION,
-          state: {
-            type: FreeOperation.PASS,
-            state: null,
-          }
-        })
-        break;
-      }
       case PlayerOperation.INSTANT_ACTION: {
         PlayerFunction.playerSignalIngame({
           type: PlayerOperation.INSTANT_ACTION,
@@ -290,6 +343,14 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
         break;
       }
     }
+
+    const spotCard = getCardStateByID(this.props.gameState, this.state.spotCardID);
+
+    const castBtn = (
+      <div className='cast-btn' onClick={() => this.castSpotCard()}>
+        施放
+      </div>
+    );
     return (
       <div className="game-scene">
         <div className='progress-displayer'>
@@ -299,6 +360,8 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
             <GameProgressInfo state = {automatonState} signal = {signal}/>
           }/>
           {signal === PlayerOperation.PRACTICE? <PracticeChoiceWindow/>: <div/>}
+          {(signal === PlayerOperation.FREE_ACTION || signal === PlayerOperation.INSTANT_ACTION)? <PassBtn type = {signal}/>: <div/>}
+          {signal === PlayerOperation.FREE_ACTION? castBtn: null}
         </div>
         <div className="my-displayer">
           <div className="my-sorcery">
@@ -356,7 +419,7 @@ class GamePage extends React.Component<GamePageProps,GamePageState> {
             <p>{"修为: " + showLevel(rivalBasicState.level)}</p>
           </div>
         </div>
-        {this.state.showingCard!=null?<CardDetail cardState={this.state.showingCard} />:null}
+        {this.state.spotCardID !== -1 && spotCard != null? <CardDetail cardState={spotCard} /> :(this.state.showingCard!=null?<CardDetail cardState={this.state.showingCard} />:null)}
       </div>
     );
   }

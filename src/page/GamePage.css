@@ -221,6 +221,11 @@ p {
   transform: rotate(20deg);
 }
 
+.is-spot-card {
+  box-sizing: border-box;
+	border: 2px solid #ff0000;
+}
+
 /* ======== CardDetail ======== */
 
 .card-detail {
@@ -467,4 +472,30 @@ p {
 .practice-choice-option-title {
 
   font-size: 4em;
+}
+
+.pass-btn {
+  margin: .2rem;
+	width: 3rem;
+
+	font-size: 1.2rem;
+	text-align: center;
+	color: #2dd2f4;
+	user-select: none;
+
+	border: 2px solid #2dd2f4;
+	background-color: #214896;
+}
+
+.cast-btn {
+  margin: .2rem;
+	width: 3rem;
+
+	font-size: 1.2rem;
+	text-align: center;
+	color: #deda00;
+	user-select: none;
+
+	border: 2px solid #deda00;
+	background-color: #707222;
 }
