@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import React from "react";
 import { socket } from "../communication/connection";
 import { RoomState } from "../regulates/interfaces";
