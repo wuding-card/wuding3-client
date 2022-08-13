@@ -4,7 +4,8 @@ import './GameEndPage.css';
 
 import { GameResult } from "../regulates/interfaces";
 interface GameEndPageProps{
-  gameResult: GameResult
+  gameResult: GameResult,
+  backRoom: () => void,
 }
 export class GameEndPage extends React.Component<GameEndPageProps,{}> {
   render(): React.ReactNode {
@@ -16,6 +17,9 @@ export class GameEndPage extends React.Component<GameEndPageProps,{}> {
             {this.props.gameResult === GameResult.AWIN? "先手玩家胜利":
               (this.props.gameResult === GameResult.BWIN? "后手玩家胜利": "平局")}
           </p>
+        </div>
+        <div className="back-room-btn" onClick={this.props.backRoom}>
+          返回房间
         </div>
       </div>
     );

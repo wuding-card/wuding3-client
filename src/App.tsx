@@ -92,7 +92,8 @@ class App extends React.PureComponent<{},AppState> {
     socket.on("room-game-end", (args) => {
       this.setPage("GameEndPage");
       this.setState({
-        gameResult: args,
+        gameResult: args.gameResult,
+        roomState: args.roomState,
       })
     })
     socket.on("leave-room-successful", () => {
@@ -106,7 +107,6 @@ class App extends React.PureComponent<{},AppState> {
   }
 
   render() {
-    
     switch(this.state.pageName){
       case "LoginPage":{
         return (
@@ -127,7 +127,7 @@ class App extends React.PureComponent<{},AppState> {
       }
       case "GameEndPage":{
         return (
-          <GameEndPage gameResult = {this.state.gameResult}/>
+          <GameEndPage gameResult = {this.state.gameResult} backRoom = {() => {this.setPage("RoomPage")}}/>
         );
       }
       default:{
