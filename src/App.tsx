@@ -4,10 +4,11 @@ import internal from 'stream';
 import LoginPage from './page/LoginPage';
 import ErrorPage from './page/ErrorPage';
 import GamePage from './page/GamePage';
-import { CardState, GameStage, GameState, GameStep, PlayerState, RoomState} from './regulates/interfaces'
+import { CardState, GameResult, GameStage, GameState, GameStep, PlayerState, RoomState} from './regulates/interfaces'
 import { socket } from './communication/connection';
 import { RoomPage } from './page/RoomPage';
 import { PlayerOperation } from './regulates/signals';
+import { GameEndPage } from './page/GameEndPage';
 
 interface AppState {
   userName: string,
@@ -15,6 +16,7 @@ interface AppState {
   gameState: GameState,
   signal: PlayerOperation,
   roomState: RoomState,
+  gameResult: GameResult,
 }
 
 class App extends React.PureComponent<{},AppState> {
@@ -60,6 +62,7 @@ class App extends React.PureComponent<{},AppState> {
         users: [],
         decks: [],
       },
+      gameResult: GameResult.DRAW,
     };
     this.setPage = this.setPage.bind(this);
     this.setGameState = this.setGameState.bind(this);
@@ -86,6 +89,12 @@ class App extends React.PureComponent<{},AppState> {
       this.setRoomState(args);
       this.setPage("RoomPage");
     });
+    socket.on("room-game-end", (args) => {
+      this.setPage("GameEndPage");
+      this.setState({
+        gameResult: args,
+      })
+    })
     socket.on("leave-room-successful", () => {
       this.setPage("LoginPage");
       this.setRoomState({
@@ -114,6 +123,11 @@ class App extends React.PureComponent<{},AppState> {
         console.log("roompage");
         return (
           <RoomPage roomState = {this.state.roomState}></RoomPage>
+        );
+      }
+      case "GameEndPage":{
+        return (
+          <GameEndPage gameResult = {this.state.gameResult}/>
         );
       }
       default:{
