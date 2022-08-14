@@ -1,10 +1,9 @@
 import React from 'react';
 import './App.css';
-import internal from 'stream';
 import LoginPage from './page/LoginPage';
 import ErrorPage from './page/ErrorPage';
 import GamePage from './page/GamePage';
-import { CardState, GameResult, GameStage, GameState, GameStep, PlayerState, RoomState} from './regulates/interfaces'
+import { GameResult, GameStage, GameState, GameStep, RoomState} from './regulates/interfaces'
 import { socket } from './communication/connection';
 import { RoomPage } from './page/RoomPage';
 import { PlayerOperation } from './regulates/signals';
@@ -127,7 +126,7 @@ class App extends React.PureComponent<{},AppState> {
       }
       case "GameEndPage":{
         return (
-          <GameEndPage gameResult = {this.state.gameResult} backRoom = {() => {this.setPage("RoomPage")}}/>
+          <GameEndPage gameResult = {this.state.gameResult} backRoom = {() => {this.setPage("RoomPage")}} roomState={this.state.roomState}/>
         );
       }
       default:{

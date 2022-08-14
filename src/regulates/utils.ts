@@ -26,7 +26,7 @@ export function getDescription(val: string): string {
 
 export const SectList: string[] = ["通用","奔雷","焚金","焚天","光华","飘渺","天灵","万法","元力"];
 export const TypeList: string[] = ["万物","即时","触发","持续","法阵","攻击","防御","法器"];
-export const LevelList: string[] = ["凡人","炼气","筑基","金丹","元神","炼虚","涅槃","逍遥"];
+export const LevelList: string[] = ["凡人","通天","练气","筑基","金丹","元神","炼虚","涅槃","逍遥"];
 
 export function showSect(val: number): string {
   return SectList[val];
@@ -59,8 +59,8 @@ export function numberAbbr(val: number): string {
 
 export function getUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
+    const r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
