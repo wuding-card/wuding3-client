@@ -8,6 +8,8 @@ import { socket } from './communication/connection';
 import { RoomPage } from './page/RoomPage';
 import { PlayerOperation } from './regulates/signals';
 import { GameEndPage } from './page/GameEndPage';
+import { AlertWindow } from './page/Composition';
+import PubSub from 'pubsub-js'
 
 interface AppState {
   userName: string,
@@ -16,10 +18,11 @@ interface AppState {
   signal: PlayerOperation,
   roomState: RoomState,
   gameResult: GameResult,
+  alertMessage: string | null,
 }
 
 class App extends React.PureComponent<{},AppState> {
-
+  messageID: number = 0;
   setPage(val: string) {
     this.setState({pageName: val});
   }
@@ -38,6 +41,16 @@ class App extends React.PureComponent<{},AppState> {
 
   setUserName(val: string) {
     this.setState({userName: val});
+  }
+
+  sendAlertMessage(msg: string, dur: number = 3) {
+    this.setState({alertMessage: msg});
+    const thisMsgID = (++this.messageID);
+    setTimeout(() => {
+      if(this.messageID === thisMsgID) {
+        this.setState({alertMessage: null});
+      }
+    }, dur * 1000);
   }
   constructor(props: any){
     super(props);
@@ -62,6 +75,7 @@ class App extends React.PureComponent<{},AppState> {
         decks: [],
       },
       gameResult: GameResult.DRAW,
+      alertMessage: null,
     };
     this.setPage = this.setPage.bind(this);
     this.setGameState = this.setGameState.bind(this);
@@ -103,37 +117,48 @@ class App extends React.PureComponent<{},AppState> {
         decks: [],
       });
     });
+    socket.on("alert-message", (args) => {
+      PubSub.publish('alert-pubsub-message',args);
+    });
+  }
+
+  componentDidMount(): void {
+    PubSub.subscribe("alert-pubsub-message", (msg, data) => {
+      this.sendAlertMessage(data);
+    });
+  }
+
+  componentDidUnMount(): void {
+    PubSub.clearAllSubscriptions();
   }
 
   render() {
+    let content = null;
     switch(this.state.pageName){
       case "LoginPage":{
-        return (
-          <LoginPage
-            userName={this.state.userName}></LoginPage>
-        );
+        content = <LoginPage userName={this.state.userName}/>;
+        break;
       }
       case "GamePage":{
-        return (
-          <GamePage gameState={this.state.gameState} signal={this.state.signal}></GamePage>
-        );
+        content = <GamePage gameState={this.state.gameState} signal={this.state.signal}/>;
+        break;
       }
       case "RoomPage":{
-        console.log("roompage");
-        return (
-          <RoomPage roomState = {this.state.roomState}></RoomPage>
-        );
+        content = <RoomPage roomState = {this.state.roomState}/>;
+        break;
       }
       case "GameEndPage":{
-        return (
-          <GameEndPage gameResult = {this.state.gameResult} backRoom = {() => {this.setPage("RoomPage")}} roomState={this.state.roomState}/>
-        );
+        content = <GameEndPage gameResult = {this.state.gameResult} backRoom = {() => {this.setPage("RoomPage")}} roomState={this.state.roomState}/>;
+        break;
       }
       default:{
-        return <ErrorPage reason={"PageNotFound"}></ErrorPage>;
+        content = <ErrorPage reason={"PageNotFound"}></ErrorPage>;
       }
     }
-    
+    return <div>
+      {this.state.alertMessage != null? <AlertWindow message = {this.state.alertMessage}/>: null}
+      {content}
+    </div>;
   }
 }
 export default App;

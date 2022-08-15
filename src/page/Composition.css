@@ -55,3 +55,29 @@
 	border-radius: 999px;
 	background-color: #1f1f1f;
 }
+
+.alert-message-window {
+	display: flex;
+	position: fixed;
+	align-items: center;
+  justify-content: center;
+	top: 10px;
+	left: 0;
+	right: 0;	
+	pointer-events: none;
+}
+
+.alert-message-content {
+	transition: .5s;
+
+	margin: auto;
+	padding: 0.4rem 1rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: center;
+	font-size: 1rem;
+	background-color: #353536;
+	border: 2px solid #00dffc;
+	border-radius: 5px;
+	color: #e7e7e7;
+}
