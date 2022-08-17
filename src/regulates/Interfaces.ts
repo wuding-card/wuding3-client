@@ -71,8 +71,5 @@ export interface GameState {
 export interface RoomState {
   roomName: string,
   users: (string | null)[],
-  decks: ({
-    name: string,
-    deck: Deck,
-  })[],
+  decks: Deck[],
 }
